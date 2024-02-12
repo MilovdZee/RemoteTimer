@@ -8,14 +8,25 @@ void setup_wifi() {
   while (WiFi.status() != WL_CONNECTED && max_delay-- > 0) {
     // Update screen
     Serial.print('.');
+
+    char buffer[BUFFER_SIZE];
+    snprintf(buffer, sizeof(buffer), "C%3d", max_delay);
+    display.showString(buffer);
+
     delay(1000);
   }
   Serial.println();
 
+  String ipAddress;
   if (WiFi.status() != WL_CONNECTED) {
-    Serial.printf("Failed to connect to WiFi '%s'\n", settings.ssid);
+    Serial.printf("Failed to connect to WiFi '%s', starting AP mode.\n", settings.ssid);
+    WiFi.mode(WIFI_AP);
+    WiFi.softAP(OTA_HOSTNAME);
+    ipAddress = WiFi.softAPIP().toString();
   } else {
-    String ipAddress = WiFi.localIP().toString();
+    ipAddress = WiFi.localIP().toString();
     Serial.printf("Connected to WiFi '%s': %s\n", settings.ssid, ipAddress);
   }
+  display.startStringScroll(ipAddress.c_str(), 500);
+  while (display.Animate()) handling_delay(10);
 }

@@ -8,6 +8,8 @@
 #define OTA_HOSTNAME "RemoteTimer"
 
 #define RECEIVE_PIN D2
+#define DISPLAY_CLK D5
+#define DISPLAY_DIO D0
 
 #define BUFFER_SIZE 150
 #define ERROR_VALUE -1
@@ -17,9 +19,10 @@ public:
   char eeprom_check[10];
   char ssid[60];
   char wifi_password[60];
-  long button_code;
-  int step_size;
-  int max_duration;
+  unsigned long button_code;
+  unsigned int step_size;
+  unsigned int max_duration;
+  unsigned short brightness;
 
   Settings() {
     eeprom_check[0] = 0;
@@ -28,15 +31,17 @@ public:
     button_code = 0;
     step_size = 30;
     max_duration = 120;
+    brightness = 5;
   };
 
-  Settings(const char *ssid, const char *wifi_password, long button_code, int step_size, int max_duration) {
+  Settings(const char *ssid, const char *wifi_password, long button_code, int step_size, int max_duration, int brightness) {
     strncpy(this->eeprom_check, EEPROM_CHECK_STRING, sizeof(this->eeprom_check));
     strncpy(this->ssid, ssid, sizeof(this->ssid));
     strncpy(this->wifi_password, wifi_password, sizeof(this->wifi_password));
     this->button_code = button_code;
     this->step_size = step_size;
     this->max_duration = max_duration;
+    this->brightness = brightness;
   };
 };
 
@@ -83,7 +88,7 @@ public:
     font-size: 1em;\
     position: absolute;\
     left: 30%;\
-    bottom: 20%;\
+    bottom: 10%;\
   }\
   div div {\
     position: absolute;\

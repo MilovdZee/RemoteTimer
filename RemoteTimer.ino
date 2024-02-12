@@ -2,28 +2,26 @@
 #include <ESP8266WebServer.h>
 #include <RCSwitch.h>
 #include <Preferences.h>
+#include <TM1637TinyDisplay.h>
 
 #include "config.h"
 
 ESP8266WebServer server(80);
-
 RCSwitch remoteSwitch = RCSwitch();
+TM1637TinyDisplay display(DISPLAY_CLK, DISPLAY_DIO);
 
 void setup() {
   Serial.begin(115200);
+
+  delay(2000);
 
   Serial.println();
   Serial.println("Starting setup...");
 
   read_settings();
-  if (check_validity(get_settings())) {
-    setup_wifi();
-    setup_ota();
-  } else {
-    Serial.println("Not configured. Starting WiFi in AP mode...");
-    WiFi.mode(WIFI_AP);
-    WiFi.softAP(OTA_HOSTNAME);
-  }
+  setup_display();
+  setup_wifi();
+  setup_ota();
 
   // Setup the web server
   server.on("/", handle_root);
@@ -42,16 +40,19 @@ void setup() {
 }
 
 void handling_delay(int ms) {
-  while(ms-- > 0) {
+  while (ms-- > 0) {
     delay(1);
     ArduinoOTA.handle();
     server.handleClient();
+    display.Animate();
   }
 }
 
+int count = 0;
 void loop() {
   ArduinoOTA.handle();
   server.handleClient();
+  display.Animate();
 
   if (remoteSwitch.available()) {
     Serial.printf("value: %ld, bit length: %d, delay: %d, protocol: %d\n",
@@ -65,4 +66,7 @@ void loop() {
     handling_delay(50);
     digitalWrite(LED_BUILTIN, HIGH);
   }
+
+  display.showNumber(count++);
+  handling_delay(200);
 }

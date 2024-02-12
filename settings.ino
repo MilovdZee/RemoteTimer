@@ -1,15 +1,10 @@
-#define CHECK_ADDR 0                                                         // char[10]
-#define SSID_ADDR (CHECK_ADDR + sizeof(eeprom_check))                        // char[60]
-#define WIFI_PASSWORD_ADDR (SSID_ADDR + sizeof(ssid))                        // char[60]
-#define BUTTON_CODE_ADDR (WIFI_PASSWORD_ADDR + sizeof(wifi_password))        // long
-#define STEP_SIZE_ADDR (BUTTON_CODE_ADDR + sizeof(button_code))              // int
-#define MAX_DURATION_ADDR (STEP_SIZE_ADDR + sizeof(step_size))               // int
-
-// MACRO : Combines FROM_BYTES into TO_OBJECT of datatype "DATATYPE"
-#define combine_bytes(FROM_BYTES, DATATYPE, TO_OBJECT) TO_OBJECT = *((DATATYPE *)FROM_BYTES);
-
-// MACRO : Splits FROM_DATA of DATATYPE into equivalent byte array TO_BYTES
-#define split_bytes(FROM_DATA, DATATYPE, TO_BYTES) *((DATATYPE *)TO_BYTES) = FROM_DATA;
+#define CHECK_ADDR 0                                                   // char[10]
+#define SSID_ADDR (CHECK_ADDR + sizeof(eeprom_check))                  // char[60]
+#define WIFI_PASSWORD_ADDR (SSID_ADDR + sizeof(ssid))                  // char[60]
+#define BUTTON_CODE_ADDR (WIFI_PASSWORD_ADDR + sizeof(wifi_password))  // long
+#define STEP_SIZE_ADDR (BUTTON_CODE_ADDR + sizeof(button_code))        // int
+#define MAX_DURATION_ADDR (STEP_SIZE_ADDR + sizeof(step_size))         // int
+#define BRIGHTNESS_ADDR (MAX_DURATION_ADDR + sizeof(max_duration))     // short
 
 Preferences preferences;
 
@@ -34,6 +29,7 @@ void read_settings() {
     Serial.println("EEPROM data NOT found");
     settings = Settings();
   }
+  show_settings(settings);
 }
 
 void write_settings(Settings newSettings) {
@@ -42,6 +38,7 @@ void write_settings(Settings newSettings) {
     Serial.println("ERROR: Failed to write preferences to EEPROM!");
     return;
   }
+  show_settings(newSettings);
   settings = newSettings;
 }
 
@@ -51,4 +48,14 @@ boolean check_validity(Settings settings) {
 
 Settings get_settings() {
   return settings;
+}
+
+void show_settings(Settings settings) {
+  Serial.printf("\nSettings:\n");
+  Serial.printf("  - ssid                 : '%s'\n", settings.ssid);
+  Serial.printf("  - wifi_password        : '%s'\n", settings.wifi_password);
+  Serial.printf("  - button_code          : '%ld'\n", settings.button_code);
+  Serial.printf("  - step_size            : '%d'\n", settings.step_size);
+  Serial.printf("  - max_duration         : '%d'\n", settings.max_duration);
+  Serial.printf("  - brightness           : '%d'\n", settings.brightness);
 }

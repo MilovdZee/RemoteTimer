@@ -1,17 +1,51 @@
 void handle_root() {
+  bool do_reset = false;
+  Settings settings = get_settings();
+
+  if (server.method() == HTTP_POST) {
+    unsigned int step_size = server.arg("step_size").toInt();
+    unsigned int max_duration = server.arg("max_duration").toInt();
+    unsigned short brightness = server.arg("brightness").toInt();
+
+    Settings updated_settings = Settings(settings.ssid, settings.wifi_password, settings.button_code, step_size, max_duration, brightness);
+    write_settings(updated_settings);
+    settings = get_settings();
+
+    do_reset = true;
+  }
+
   String rootForm = String(CSS) + "<html>\
   <body>\
     <div class=\"container\">\
       <h1>Settings</h1>\
+      <form method=\"POST\" action=\"/\">\
+        Brightness:</br>\
+        <input type=\"range\" name=\"brightness\" min=\"0\" max=\"7\" value=\""
+                    + String(settings.brightness) + "\">\
+        Max duration:<br/>\
+        <input type=\"text\" name=\"max_duration\" value=\""
+                    + String(settings.max_duration) + "\"><br/><br/>\
+        Step size:<br/>\
+        <input type=\"text\" name=\"step_size\" value=\""
+                    + String(settings.step_size) + "\"><br/>\
+        </br>\
+        <input type=\"submit\" value=\"Submit\">\
+      </form>\
       <div><a href=\"/wifi\">wifi</a></div>\
     </div>\
   </body>\
 </html>";
 
   server.send(200, "text/html", rootForm);
+
+  if (do_reset) {
+    handling_delay(500);
+    ESP.restart();
+  }
 }
 
 void handle_wifi() {
+  bool do_reset = false;
   Settings settings = get_settings();
 
   if (server.method() == HTTP_POST) {
@@ -20,15 +54,11 @@ void handle_wifi() {
     snprintf(ssid, sizeof(ssid), server.arg("ssid").c_str());
     snprintf(wifi_password, sizeof(wifi_password), server.arg("password").c_str());
 
-    Serial.printf("Settings:\n");
-    Serial.printf("  - ssid                 : '%s'\n", ssid);
-    Serial.printf("  - wifi_password        : '%s'\n", wifi_password);
-
-    Settings updated_settings = Settings(ssid, wifi_password, settings.button_code, settings.step_size, settings.max_duration);
+    Settings updated_settings = Settings(ssid, wifi_password, settings.button_code, settings.step_size, settings.max_duration, settings.brightness);
     write_settings(updated_settings);
+    settings = get_settings();
 
-    delay(500);
-    ESP.restart();
+    do_reset = true;
   }
 
   // Read back to check if the values are stored correctly
@@ -50,4 +80,9 @@ void handle_wifi() {
 </html>";
 
   server.send(200, "text/html", wifiForm);
+
+  if (do_reset) {
+    handling_delay(500);
+    ESP.restart();
+  }
 }

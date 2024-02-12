@@ -13,6 +13,11 @@ void ota_on_progress(int progress, int total) {
     if (percentage % 10 == 0) {
       Serial.printf("OTA update progress: %u\r\n", percentage);
     }
+
+    char buffer[BUFFER_SIZE];
+    snprintf(buffer, sizeof(buffer), "F%3d", percentage);
+    display.showString(buffer);
+
     last_shown = percentage;
   }
 }
