@@ -7,9 +7,10 @@ void handle_root() {
     unsigned int max_duration = server.arg("max_duration").toInt();
     unsigned short brightness = server.arg("brightness").toInt();
 
-    Settings updated_settings = Settings(settings.ssid, settings.wifi_password, settings.button_code, step_size, max_duration, brightness);
-    write_settings(updated_settings);
-    settings = get_settings();
+    settings.step_size = step_size;
+    settings.max_duration = max_duration;
+    settings.brightness = brightness;
+    write_settings(settings);
 
     do_reset = true;
   }
@@ -54,9 +55,9 @@ void handle_wifi() {
     snprintf(ssid, sizeof(ssid), server.arg("ssid").c_str());
     snprintf(wifi_password, sizeof(wifi_password), server.arg("password").c_str());
 
-    Settings updated_settings = Settings(ssid, wifi_password, settings.button_code, settings.step_size, settings.max_duration, settings.brightness);
-    write_settings(updated_settings);
-    settings = get_settings();
+    strncpy(settings.ssid, ssid, sizeof(settings.ssid));
+    strncpy(settings.wifi_password, wifi_password, sizeof(settings.wifi_password));
+    write_settings(settings);
 
     do_reset = true;
   }

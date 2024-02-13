@@ -16,7 +16,7 @@ void ota_on_progress(int progress, int total) {
 
     char buffer[BUFFER_SIZE];
     snprintf(buffer, sizeof(buffer), "F%3d", percentage);
-    display.showString(buffer);
+    show_string(buffer);
 
     last_shown = percentage;
   }

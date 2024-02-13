@@ -11,7 +11,7 @@ void setup_wifi() {
 
     char buffer[BUFFER_SIZE];
     snprintf(buffer, sizeof(buffer), "C%3d", max_delay);
-    display.showString(buffer);
+    show_string(buffer);
 
     delay(1000);
   }
@@ -27,6 +27,6 @@ void setup_wifi() {
     ipAddress = WiFi.localIP().toString();
     Serial.printf("Connected to WiFi '%s': %s\n", settings.ssid, ipAddress);
   }
-  display.startStringScroll(ipAddress.c_str(), 500);
-  while (display.Animate()) handling_delay(10);
+  display.startStringScroll(ipAddress.c_str(), 300);
+  while (display.Animate()) delay(10);
 }
