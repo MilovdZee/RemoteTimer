@@ -49,6 +49,7 @@ void handling_delay(int ms) {
 }
 
 int count = 0;
+int adder = 1;
 void loop() {
   ArduinoOTA.handle();
   server.handleClient();
@@ -67,6 +68,10 @@ void loop() {
     digitalWrite(LED_BUILTIN, HIGH);
   }
 
-  display.showNumber(count++);
+  display.showNumber(count);
+  if(count + adder == 10000 || count + adder == -1) {
+    adder *= -1;
+  }
+  count += adder;
   handling_delay(200);
 }
