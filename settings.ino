@@ -34,9 +34,12 @@ void read_settings() {
 
 void write_settings(Settings newSettings) {
   preferences.begin("RemoteTimer", false);
-  if (!preferences.putBytes("settings", &newSettings, sizeof(newSettings))) {
+  int written = preferences.putBytes("settings", &newSettings, sizeof(newSettings));
+  if (!written) {
     Serial.println("ERROR: Failed to write preferences to EEPROM!");
     return;
+  } else {
+    Serial.printf("Written %d bytes to EEPROM\n", written);
   }
   show_settings(newSettings);
   settings = newSettings;

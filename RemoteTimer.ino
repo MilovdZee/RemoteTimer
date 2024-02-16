@@ -125,13 +125,13 @@ void loop() {
       write_settings(settings);
     }
 
-    if (button_code = get_settings().button_code) {
+    if (button_code == get_settings().button_code) {
       Serial.println("Remote button code received");
       increase_minutes_to_go();
     }
 
     digitalWrite(LED_BUILTIN, LOW);
-    handling_delay(100);
+    handling_delay(200);
     digitalWrite(LED_BUILTIN, HIGH);
     remoteSwitch.resetAvailable();
   }

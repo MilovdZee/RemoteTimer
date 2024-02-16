@@ -30,23 +30,13 @@ public:
   unsigned short brightness;
 
   Settings() {
-    eeprom_check[0] = 0;
+    strncpy(this->eeprom_check, EEPROM_CHECK_STRING, sizeof(this->eeprom_check));
     ssid[0] = 0;
     wifi_password[0] = 0;
     button_code = 0;
     step_size = 30;
     max_duration = 120;
     brightness = 5;
-  };
-
-  Settings(const char *ssid, const char *wifi_password, long button_code, int step_size, int max_duration, int brightness) {
-    strncpy(this->eeprom_check, EEPROM_CHECK_STRING, sizeof(this->eeprom_check));
-    strncpy(this->ssid, ssid, sizeof(this->ssid));
-    strncpy(this->wifi_password, wifi_password, sizeof(this->wifi_password));
-    this->button_code = button_code;
-    this->step_size = step_size;
-    this->max_duration = max_duration;
-    this->brightness = brightness;
   };
 };
 

@@ -1,21 +1,21 @@
 void setup_wifi() {
   Settings settings = get_settings();
-  if (settings.ssid[0] == 0) return;
+  if (settings.ssid[0] != 0) {
+    Serial.printf("Connecting to WiFi '%s': .", settings.ssid);
+    WiFi.begin(settings.ssid, settings.wifi_password);
+    int max_delay = 20;
+    while (WiFi.status() != WL_CONNECTED && max_delay-- > 0) {
+      // Update screen
+      Serial.print('.');
 
-  Serial.printf("Connecting to WiFi '%s': .", settings.ssid);
-  WiFi.begin(settings.ssid, settings.wifi_password);
-  int max_delay = 20;
-  while (WiFi.status() != WL_CONNECTED && max_delay-- > 0) {
-    // Update screen
-    Serial.print('.');
+      char buffer[BUFFER_SIZE];
+      snprintf(buffer, sizeof(buffer), "C%3d", max_delay);
+      show_string(buffer);
 
-    char buffer[BUFFER_SIZE];
-    snprintf(buffer, sizeof(buffer), "C%3d", max_delay);
-    show_string(buffer);
-
-    delay(1000);
+      delay(1000);
+    }
+    Serial.println();
   }
-  Serial.println();
 
   String ipAddress;
   if (WiFi.status() != WL_CONNECTED) {
