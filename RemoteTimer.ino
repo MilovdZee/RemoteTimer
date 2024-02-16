@@ -4,6 +4,7 @@
 #include <Preferences.h>
 #include <TM1637TinyDisplay.h>
 #include <WiFiClientSecure.h>
+#include <coredecls.h> // required for settimeofday_cb() (NTP sync callback)
 
 #include "config.h"
 
