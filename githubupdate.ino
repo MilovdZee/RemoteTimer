@@ -50,11 +50,6 @@ long read_content_length_from_headers() {
       content_length = atol(get_header_value(line).c_str());
       Serial.printf("  - Content length: %d bytes\n", content_length);
     }
-
-    if (line.startsWith("Content-Type: ")) {
-      const char *content_type = get_header_value(line).c_str();
-      Serial.printf("  - Content type: '%s'\n", content_type);
-    }
   }
 
   return content_length;
