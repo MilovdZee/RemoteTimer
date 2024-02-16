@@ -3,6 +3,7 @@
 #include <RCSwitch.h>
 #include <Preferences.h>
 #include <TM1637TinyDisplay.h>
+#include <WiFiClientSecure.h>
 
 #include "config.h"
 
@@ -26,6 +27,9 @@ void setup() {
   setup_display();
   setup_wifi();
   setup_ota();
+  setup_ntp();
+
+  check_for_updates();
 
   // Setup the web server
   server.on("/", handle_root);
