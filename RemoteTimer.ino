@@ -112,6 +112,14 @@ void handler() {
 void loop() {
   handler();
 
+  static time_t last_check_time = -1;
+  time_t now = time(nullptr);
+  if (now != last_check_time && now % (3600 * 24) == 0) {
+    // run once a day
+    last_check_time = now;
+    check_for_updates();
+  }
+
   if (remoteSwitch.available()) {
     unsigned long button_code = remoteSwitch.getReceivedValue();
     Serial.printf("value: %ld, bit length: %d, delay: %d, protocol: %d\n",
