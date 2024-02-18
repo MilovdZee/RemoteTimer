@@ -4,7 +4,7 @@
 #include <Preferences.h>
 #include <TM1637TinyDisplay.h>
 #include <WiFiClientSecure.h>
-#include <coredecls.h> // required for settimeofday_cb() (NTP sync callback)
+#include <coredecls.h>  // required for settimeofday_cb() (NTP sync callback)
 
 #include "config.h"
 
@@ -63,10 +63,9 @@ int enabled_minutes_to_go = 0;
 unsigned long last_minute_tick_millis = 0;
 
 void start_button_code_listening() {
-  Serial.println("Start listining for button code...");
+  Serial.println("Start listening for button code...");
   store_next_received_switch_code = true;
-  display.setBrightness(get_settings().brightness);
-  display.startAnimation(ROTATE_ANIMATION, FRAMES(ROTATE_ANIMATION), TIME_MS(50));
+  start_rotate_animation();
 }
 
 void stop_button_code_listening() {
@@ -108,6 +107,7 @@ void handler() {
   server.handleClient();
   display.Animate(true);
   update_minutes_to_go();
+  check_waiting();
 }
 
 void loop() {
@@ -143,9 +143,11 @@ void loop() {
       increase_minutes_to_go();
     }
 
+    // blink internal LED
     digitalWrite(LED_BUILTIN, LOW);
     handling_delay(200);
     digitalWrite(LED_BUILTIN, HIGH);
+
     remoteSwitch.resetAvailable();
   }
 
@@ -159,7 +161,7 @@ void loop() {
     }
 
     // debounce
-    handling_delay(10);
+    handling_delay(50);
   }
 
   // Listening for button code timed out

@@ -10,29 +10,46 @@ void handle_root() {
     settings.step_size = step_size;
     settings.max_duration = max_duration;
     settings.brightness = brightness;
+    snprintf(settings.on_time, sizeof(settings.on_time), server.arg("on_time").c_str());
+    snprintf(settings.off_time, sizeof(settings.off_time), server.arg("off_time").c_str());
     write_settings(settings);
 
     do_reset = true;
   }
 
-  String rootForm = String(CSS) + "<html>\
+  String rootForm = String(css) + "<html>\
   <body>\
     <div class=\"container\">\
       <h1>Settings</h1>\
       <form method=\"POST\" action=\"/\">\
-        Brightness:</br>\
-        <input type=\"range\" name=\"brightness\" min=\"0\" max=\"7\" value=\""
-                    + String(settings.brightness) + "\">\
-        Max duration:<br/>\
-        <input type=\"text\" name=\"max_duration\" value=\""
-                    + String(settings.max_duration) + "\"><br/><br/>\
-        Step size:<br/>\
-        <input type=\"text\" name=\"step_size\" value=\""
-                    + String(settings.step_size) + "\"><br/>\
+        <div>\
+          <div>Brightness:</div>\
+          <div><input type=\"range\" name=\"brightness\" min=\"0\" max=\"7\" value=\"" + String(settings.brightness) + "\"></div>\
+        </div>\
+        \
+        <div>\
+          <div>Max duration:</div>\
+          <div><input type=\"text\" name=\"max_duration\" value=\"" + String(settings.max_duration) + "\"></div>\
+        </div>\
+        \
+        <div>\
+          <div>Step size:</div>\
+          <div><input type=\"text\" name=\"step_size\" value=\"" + String(settings.step_size) + "\"></div>\
+        </div>\
+        \
+        <div>\
+          <div>Light On/Off times:</div>\
+          <div>\
+            <input type=\"text\" name=\"on_time\" maxlength=\"5\" value=\"" + String(settings.on_time) + "\">\
+            &nbsp;-&nbsp;\
+            <input type=\"text\" name=\"off_time\" maxlength=\"5\" value=\"" + String(settings.off_time) + "\">\
+          </div>\
+        </div>\
+        \
         </br>\
         <input type=\"submit\" value=\"Submit\">\
       </form>\
-      <div><a href=\"/wifi\">wifi</a></div>\
+      <div class=\"wifi_link\"><a href=\"/wifi\">wifi</a></div>\
     </div>\
   </body>\
 </html>";
@@ -50,30 +67,23 @@ void handle_wifi() {
   Settings settings = get_settings();
 
   if (server.method() == HTTP_POST) {
-    char ssid[60];
-    char wifi_password[60];
-    snprintf(ssid, sizeof(ssid), server.arg("ssid").c_str());
-    snprintf(wifi_password, sizeof(wifi_password), server.arg("password").c_str());
-
-    strncpy(settings.ssid, ssid, sizeof(settings.ssid));
-    strncpy(settings.wifi_password, wifi_password, sizeof(settings.wifi_password));
+    snprintf(settings.ssid, sizeof(settings.ssid), server.arg("ssid").c_str());
+    snprintf(settings.wifi_password, sizeof(settings.wifi_password), server.arg("password").c_str());
     write_settings(settings);
 
     do_reset = true;
   }
 
   // Read back to check if the values are stored correctly
-  String wifiForm = String(CSS) + "<html>\
+  String wifiForm = String(css) + "<html>\
   <body>\
     <div class=\"container\">\
     <h1>WiFi Settings</h1>\
       <form method=\"POST\" action=\"/wifi\">\
         SSID:</br>\
-        <input type=\"text\" name=\"ssid\" value=\""
-                    + String(settings.ssid) + "\"></br></br>\
+        <input type=\"text\" name=\"ssid\" value=\"" + String(settings.ssid) + "\"></br></br>\
         Password:</br>\
-        <input type=\"text\" name=\"password\" value=\""
-                    + String(settings.wifi_password) + "\">\
+        <input type=\"text\" name=\"password\" value=\"" + String(settings.wifi_password) + "\">\
         <input type=\"submit\" value=\"Submit\">\
       </form>\
     </div>\

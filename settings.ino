@@ -1,11 +1,3 @@
-#define CHECK_ADDR 0                                                   // char[10]
-#define SSID_ADDR (CHECK_ADDR + sizeof(eeprom_check))                  // char[60]
-#define WIFI_PASSWORD_ADDR (SSID_ADDR + sizeof(ssid))                  // char[60]
-#define BUTTON_CODE_ADDR (WIFI_PASSWORD_ADDR + sizeof(wifi_password))  // long
-#define STEP_SIZE_ADDR (BUTTON_CODE_ADDR + sizeof(button_code))        // int
-#define MAX_DURATION_ADDR (STEP_SIZE_ADDR + sizeof(step_size))         // int
-#define BRIGHTNESS_ADDR (MAX_DURATION_ADDR + sizeof(max_duration))     // short
-
 Preferences preferences;
 
 Settings settings;
@@ -61,4 +53,5 @@ void show_settings(Settings settings) {
   Serial.printf("  - step_size            : '%d'\n", settings.step_size);
   Serial.printf("  - max_duration         : '%d'\n", settings.max_duration);
   Serial.printf("  - brightness           : '%d'\n", settings.brightness);
+  Serial.printf("  - on/off times         : '%s' - '%s'\n", settings.on_time, settings.off_time);
 }
