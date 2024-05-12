@@ -29,15 +29,6 @@ void start_rotate_animation() {
   }
 }
 
-void switch_light_on() {
-  if (state != LIGHT_ON) {
-    Serial.println("Switching light on");
-    show_number(8888);
-
-    state = LIGHT_ON;
-  }
-}
-
 void show_number(int number) {
   display.stopAnimation();
   display.setBrightness(get_settings().brightness);
@@ -54,17 +45,3 @@ void show_string(const char* string) {
   state = SHOWING;
 }
 
-void check_waiting() {
-  if (state == WAITING || state == LIGHT_ON) {
-    Settings settings = get_settings();
-    int on_second = str_to_time(settings.on_time);
-    int off_second = str_to_time(settings.off_time);
-    int now = get_second_of_day();
-
-    if ((on_second < off_second && now > on_second && now < off_second) || (on_second > off_second && (now > on_second || now < off_second))) {
-      switch_light_on();
-    } else {
-      start_waiting_animation();
-    }
-  }
-}

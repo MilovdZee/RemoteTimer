@@ -3,7 +3,7 @@ void setup_wifi() {
   if (settings.ssid[0] != 0) {
     Serial.printf("Connecting to WiFi '%s': .", settings.ssid);
     WiFi.begin(settings.ssid, settings.wifi_password);
-    int max_delay = 20;
+    int max_delay = 30;
     while (WiFi.status() != WL_CONNECTED && max_delay-- > 0) {
       // Update screen
       Serial.print('.');

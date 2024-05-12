@@ -24,6 +24,11 @@ void setup() {
   digitalWrite(RELAIS, LOW);
   pinMode(RELAIS, OUTPUT);
 
+  digitalWrite(LED1, HIGH);
+  pinMode(LED1, OUTPUT);
+  digitalWrite(LED2, HIGH);
+  pinMode(LED2, OUTPUT);
+
   read_settings();
   setup_display();
   setup_wifi();
@@ -107,7 +112,7 @@ void handler() {
   server.handleClient();
   display.Animate(true);
   update_minutes_to_go();
-  check_waiting();
+  check_night_light();
 }
 
 void loop() {
@@ -140,13 +145,16 @@ void loop() {
 
     if (button_code == get_settings().button_code) {
       Serial.println("Remote button code received");
+
+      // blink LED
+      digitalWrite(LED1, LOW);
+      digitalWrite(LED2, LOW);
+      handling_delay(200);
+      digitalWrite(LED1, HIGH);
+      digitalWrite(LED2, HIGH);
+
       increase_minutes_to_go();
     }
-
-    // blink internal LED
-    digitalWrite(LED_BUILTIN, LOW);
-    handling_delay(200);
-    digitalWrite(LED_BUILTIN, HIGH);
 
     remoteSwitch.resetAvailable();
   }

@@ -7,8 +7,6 @@
 
 WiFiClientSecure client;
 
-X509List cert(root_ca);
-
 String get_header_value(String header) {
   char *space = strchr(header.c_str(), ' ');
   int index_of_space = space ? space - header.c_str() + 1 : -1;
@@ -59,7 +57,7 @@ boolean connect_to_host() {
   if (WiFi.status() != WL_CONNECTED) return false;
 
   // set certificate handling
-  client.setTrustAnchors(&cert);
+  client.setInsecure();
 
   // connect to the host
   if (!client.connect(UPDATE_HOST, UPDATE_PORT)) {
