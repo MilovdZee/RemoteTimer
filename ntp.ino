@@ -4,6 +4,8 @@ void timeUpdated() {
 }
 
 void setup_ntp() {
+  if (WiFi.status() != WL_CONNECTED) return;
+  
   // implement NTP update of timekeeping (with automatic hourly updates)
   configTime(0, 0, NTP_SERVER);
   setenv("TZ", MY_TZ, 1);

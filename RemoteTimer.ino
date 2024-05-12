@@ -24,11 +24,6 @@ void setup() {
   digitalWrite(RELAIS, LOW);
   pinMode(RELAIS, OUTPUT);
 
-  digitalWrite(LED1, HIGH);
-  pinMode(LED1, OUTPUT);
-  digitalWrite(LED2, HIGH);
-  pinMode(LED2, OUTPUT);
-
   read_settings();
   setup_display();
   setup_wifi();
@@ -147,11 +142,9 @@ void loop() {
       Serial.println("Remote button code received");
 
       // blink LED
-      digitalWrite(LED1, LOW);
-      digitalWrite(LED2, LOW);
+      switch_light_on();
       handling_delay(200);
-      digitalWrite(LED1, HIGH);
-      digitalWrite(LED2, HIGH);
+      switch_light_off();
 
       increase_minutes_to_go();
     }

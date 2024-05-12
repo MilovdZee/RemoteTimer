@@ -1,7 +1,15 @@
-void switch_light(bool state) {
-  Serial.println("Switching light");
-  digitalWrite(LED1, state ? LOW : HIGH);
-  digitalWrite(LED2, state ? LOW : HIGH);
+void switch_light_on() {
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  digitalWrite(LED1, LOW);
+  digitalWrite(LED2, LOW);
+}
+
+void switch_light_off() {
+  pinMode(LED1, SPECIAL);
+  pinMode(LED2, SPECIAL);
+  digitalWrite(LED1, HIGH);
+  digitalWrite(LED2, HIGH);
 }
 
 void check_night_light() {
@@ -11,8 +19,8 @@ void check_night_light() {
   int now = get_second_of_day();
 
   if ((on_second < off_second && now > on_second && now < off_second) || (on_second > off_second && (now > on_second || now < off_second))) {
-    switch_light(true);
+    switch_light_on();
   } else {
-    switch_light(false);
+    switch_light_off();
   }
 }
