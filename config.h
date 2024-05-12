@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 #define EEPROM_CHECK_STRING "EEPROM001"
-#define CURRENT_FIRMWARE_VERSION 7
+#define CURRENT_FIRMWARE_VERSION 8
 
 #define OTA_PASSWORD "RemoteTimerPassword"
 #define OTA_HOSTNAME "RemoteTimer"

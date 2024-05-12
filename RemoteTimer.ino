@@ -110,12 +110,13 @@ void handler() {
   check_night_light();
 }
 
+int count = 0;
 void loop() {
   handler();
 
-  static time_t last_check_time = -1;
-  time_t now = time(nullptr);
-  if (now != last_check_time && now % (3600 * 24) == 0) {
+  static unsigned long last_check_time = time(nullptr);
+  unsigned long now = time(nullptr);
+  if (now - last_check_time > 3600 * 24) {
     // run once a day
     last_check_time = now;
     check_for_updates();
@@ -123,7 +124,7 @@ void loop() {
 
   if (remoteSwitch.available()) {
     unsigned long button_code = remoteSwitch.getReceivedValue();
-    Serial.printf("value: %ld, bit length: %d, delay: %d, protocol: %d\n",
+    Serial.printf("value: %lu, bit length: %d, delay: %d, protocol: %d\n",
                   button_code,
                   remoteSwitch.getReceivedBitlength(),
                   remoteSwitch.getReceivedDelay(),
